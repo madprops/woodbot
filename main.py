@@ -4,7 +4,6 @@ import json
 import re
 import traceback
 import os
-from datetime import datetime
 from pathlib import Path
 import sys
 from llama_cpp import Llama
@@ -28,11 +27,20 @@ token = None
 session = None
 delay = 3
 
+# LLAMA CONFIG
+
 # model = "/media/storage3/models/tinyllama-1.1b-chat-v0.3.Q6_K.gguf"
 model = "/media/storage3/models/pirouette-7b.Q5_K_M.gguf"
+system = f"Your name is woody and you respond to questions. Respond in 280 characters or less."
+context = 2048
+chat_format = "chatml"
+threads = 6
+gpu_layers = 33
 llama = None
 streaming = False
-system = f"Your name is woody and you respond to questions. Respond in 280 characters or less."
+verbose = False
+
+#############
 
 
 def msg(message: str) -> None:
@@ -189,15 +197,14 @@ def stream(ws, room_id, text, uname):
     ws.send(json.dumps({"type": "messageEnd", "data": get_message(), "roomId": room_id}))
 
 
-
 while True:
     llama = Llama(
         model_path=model,
-        n_ctx=2048,
-        n_threads=6,
-        n_gpu_layers=33,
-        verbose=False,
-        chat_format="chatml",
+        n_ctx=context,
+        n_threads=threads,
+        n_gpu_layers=gpu_layers,
+        verbose=verbose,
+        chat_format=chat_format,
     )
 
     try:
