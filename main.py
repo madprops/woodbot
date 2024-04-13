@@ -38,9 +38,10 @@ chat_format = "chatml"
 threads = 6
 gpu_layers = 33
 llama = None
-streaming = False
 verbose = False
 max_input = 200
+streaming = False
+ended = True
 
 #############
 
@@ -103,6 +104,7 @@ def on_message(ws, message):
             return
 
         text = data["data"]["text"].strip()
+        print(text)
 
         if not text:
             return
@@ -113,30 +115,42 @@ def on_message(ws, message):
         argument = " ".join(args).strip()
         room_id = data["roomId"]
 
-        if cmd in ["!ai", "!a", "!i", ".ai", ";ai", ",ai", "woody,"]:
+        if cmd in ["!ai", "!a", "!i", ".ai", ";ai",
+                   ",ai", "woody,", "@&#34;woody&#34;"]:
+
             respond(ws, room_id, argument, uname)
 
 
 def respond(ws, room_id, text, uname):
     def wrapper(ws, room_id, text, uname) -> None:
         global streaming
+        global ended
+
+        end = not ended
         streaming = True
-        stream(ws, room_id, text, uname)
-        streaming = False
+        ended = False
+
+        stream(ws, room_id, text, uname, end)
+
+        streaming = True
+        ended = True
 
     thread = threading.Thread(target=wrapper, args=(ws, room_id, text, uname))
     thread.daemon = True
     thread.start()
 
 
-def stream(ws, room_id, text, uname):
+def stream(ws, room_id, text, uname, end):
     def send_message(what: str, message: str) -> None:
         ws.send(json.dumps({"type": what, "data": message, "roomId": room_id}))
 
     msg(f"Responding:", text, room_id, uname)
     messages = [{"role": "system", "content": system}]
     messages.append({"role": "user", "content": text[:max_input]})
-    send_message("messageEnd", "Thinking...")
+
+    if end:
+        send_message("messageEnd", "Thinking...")
+
     send_message("messageStart", "Thinking...")
 
     try:
