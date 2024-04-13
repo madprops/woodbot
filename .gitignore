@@ -1,0 +1,13 @@
+venv/*
+output/*
+*.pyc
+__pycache__/
+.mypy_cache/
+Meltdown.egg-info/
+build/
+dist/
+main.spec
+run.spec
+decomp/
+*.tar.gz
+*.zip
