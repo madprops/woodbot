@@ -133,7 +133,7 @@ def stream(ws, room_id, text, uname):
     def send_message(what: str, message: str) -> None:
         ws.send(json.dumps({"type": what, "data": message, "roomId": room_id}))
 
-    print("Responding:", text, room_id, uname)
+    msg(f"Responding: {text} {room_id} {uname}")
     messages = [{"role": "system", "content": system}]
     messages.append({"role": "user", "content": text[:max_input]})
     send_message("messageEnd", "Thinking...")
@@ -147,7 +147,7 @@ def stream(ws, room_id, text, uname):
             seed=326,
         )
     except BaseException as e:
-        print(e)
+        msg(str(e))
         return
 
     token_printed = False
@@ -219,5 +219,5 @@ while True:
     except KeyboardInterrupt:
         break
     except Exception as e:
-        msg("(Main) Error:", e)
+        msg(f"(Main) Error: {e}")
         traceback.print_exc()
