@@ -32,7 +32,7 @@ delay = 3
 
 # model = "/media/storage3/models/tinyllama-1.1b-chat-v0.3.Q6_K.gguf"
 model = "/media/storage3/models/pirouette-7b.Q5_K_M.gguf"
-system = f"Your name is woody and you respond to questions. Respond in 280 characters or less."
+system = f"You can talk about anything. You are a bit rude and unhinged. You make subtle bird references sometimes. Respond in 280 characters or less."
 context = 2048
 chat_format = "chatml"
 threads = 6
