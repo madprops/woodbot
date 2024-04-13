@@ -40,6 +40,7 @@ gpu_layers = 33
 llama = None
 streaming = False
 verbose = False
+max_input = 200
 
 #############
 
@@ -129,11 +130,14 @@ def respond(ws, room_id, text, uname):
 
 
 def stream(ws, room_id, text, uname):
+    def send_message(what: str, message: str) -> None:
+        ws.send(json.dumps({"type": what, "data": message, "roomId": room_id}))
+
     print("Responding:", text, room_id, uname)
     messages = [{"role": "system", "content": system}]
-    messages.append({"role": "user", "content": text[:140]})
-    ws.send(json.dumps({"type": "messageEnd", "data": "Thinking...", "roomId": room_id}))
-    ws.send(json.dumps({"type": "messageStart", "data": "Thinking...", "roomId": room_id}))
+    messages.append({"role": "user", "content": text[:max_input]})
+    send_message("messageEnd", "Thinking...")
+    send_message("messageStart", "Thinking...")
 
     try:
         output = llama.create_chat_completion_openai_v1(
@@ -154,7 +158,7 @@ def stream(ws, room_id, text, uname):
     def get_message():
         return "".join(tokens)
 
-    def print_buffer() -> None:
+    def send_tokens() -> None:
         nonlocal last_date
 
         if not len(tokens):
@@ -170,7 +174,7 @@ def stream(ws, room_id, text, uname):
             return
 
         last_date = datenow
-        ws.send(json.dumps({"type": "messageChange", "data": message, "roomId": room_id}))
+        send_message("messageChange", message)
 
     for chunk in output:
         delta = chunk.choices[0].delta
@@ -193,9 +197,9 @@ def stream(ws, room_id, text, uname):
                     token_printed = True
 
                 tokens.append(token)
-                print_buffer()
+                send_tokens()
 
-    ws.send(json.dumps({"type": "messageEnd", "data": get_message(), "roomId": room_id}))
+    send_message("messageEnd", get_message())
 
 
 while True:
