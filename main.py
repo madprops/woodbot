@@ -26,6 +26,7 @@ prefix = ","
 token = None
 session = None
 delay = 3
+ws = None
 
 
 # LLAMA CONFIG
@@ -64,6 +65,14 @@ def auth():
 
 
 def run():
+    global ws
+
+    try:
+        if ws and ws.sock and ws.sock.connected:
+            return
+    except NameError:
+        pass
+
     ws = websocket.WebSocketApp(ws_url,
                                 header=headers,
                                 on_message=on_message)
@@ -71,9 +80,7 @@ def run():
     stop_event = threading.Event()
 
     def _run():
-        while not stop_event.is_set():
-            ws.run_forever()
-            time.sleep(1)  # sleep for a bit to prevent busy-waiting
+        ws.run_forever()
 
     wst = threading.Thread(target=_run)
     wst.start()
