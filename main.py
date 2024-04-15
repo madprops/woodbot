@@ -120,7 +120,9 @@ def on_message(ws, message):
         argument = " ".join(args).strip()
         room_id = data["roomId"]
 
-        if cmd in ["!ai", "!a", "!i", ".ai", ";ai", ",ai", "woody,"]:
+        if cmd in ["!ai", "!a", "!i", ".ai", ";ai", ",ai",
+                   "woody,", "woddy,", "woody:", "woddy:"]:
+
             respond(ws, room_id, argument, uname)
 
 
