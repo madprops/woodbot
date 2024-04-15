@@ -42,6 +42,7 @@ llama = None
 streaming = False
 verbose = False
 max_input = 200
+stop = ["<|im_start|>", "<|im_end|>"]
 
 #############
 
@@ -154,6 +155,7 @@ def stream(ws, room_id, text, uname):
             max_tokens=360,
             messages=messages,
             seed=326,
+            stop=stop,
         )
     except BaseException as e:
         msg(e)
