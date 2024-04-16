@@ -43,6 +43,7 @@ streaming = False
 verbose = False
 max_input = 200
 stop = ["<|im_start|>", "<|im_end|>"]
+history = []
 
 #############
 
@@ -122,7 +123,7 @@ def on_message(ws, message):
         room_id = data["roomId"]
 
         if cmd in ["!ai", "!a", "!i", ".ai", ";ai", ",ai",
-                   "woody,", "woddy,", "woody:", "woddy:"]:
+                   "woody,", "woddy,", "woody:", "woddy:", "wody,", "wody:"]:
 
             respond(ws, room_id, argument, uname)
 
@@ -140,12 +141,20 @@ def respond(ws, room_id, text, uname):
 
 
 def stream(ws, room_id, text, uname):
+    global history
+
     def send_message(what: str, message: str) -> None:
         ws.send(json.dumps({"type": what, "data": message, "roomId": room_id}))
 
     msg(f"Responding:", text, room_id, uname)
     messages = [{"role": "system", "content": system}]
-    messages.append({"role": "user", "content": text[:max_input]})
+
+    if history:
+        messages.extend(history.copy())
+
+    history = [{"role": "user", "content": text[:max_input]}]
+    messages.append(history[0])
+
     send_message("messageEnd", "Thinking...")
     send_message("messageStart", "Thinking...")
 
@@ -210,7 +219,9 @@ def stream(ws, room_id, text, uname):
                 tokens.append(token)
                 send_tokens()
 
-    send_message("messageEnd", get_message())
+    response = get_message()
+    history.append({"role": "assistant", "content": response})
+    send_message("messageEnd", response)
 
 
 while True:
