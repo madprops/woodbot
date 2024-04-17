@@ -136,7 +136,7 @@ def on_message(ws, message):
                 help_msgs = [
                     "clear",
                     "history = [ int | default ]",
-                    "system = [ str | default ]"
+                    "system = [ str | default ]",
                 ]
 
                 help_msg = f"Commands: {', '.join(help_msgs)}"
