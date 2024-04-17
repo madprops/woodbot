@@ -136,7 +136,7 @@ def on_message(ws, message):
                 global used_history
                 num = int(argument)
 
-                if num <= max_history:
+                if num >= 0 and num <= max_history:
                     used_history = num
                     send_message(ws, f"History set to {used_history}", room_id)
             else:
@@ -168,7 +168,7 @@ def stream(ws, room_id, text, uname):
     msg(f"Responding:", text, room_id, uname)
     messages = [{"role": "system", "content": system}]
 
-    if history:
+    if history and used_history:
         messages.extend(history[-used_history :])
 
     first_message = {"role": "user", "content": text[:max_input]}
