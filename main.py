@@ -44,6 +44,7 @@ verbose = False
 max_input = 200
 stop = ["<|im_start|>", "<|im_end|>"]
 history = []
+context = 3
 
 #############
 
@@ -151,10 +152,11 @@ def stream(ws, room_id, text, uname):
     messages = [{"role": "system", "content": system}]
 
     if history:
-        messages.extend(history.copy())
+        messages.extend(history[-context :])
 
-    history = [{"role": "user", "content": text[:max_input]}]
-    messages.append(history[0])
+    first_message = {"role": "user", "content": text[:max_input]}
+    history.append(first_message)
+    messages.append(first_message)
 
     send_message("messageEnd", "Thinking...")
     send_message("messageStart", "Thinking...")
