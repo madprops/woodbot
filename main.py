@@ -45,6 +45,7 @@ max_input = 200
 stop = ["<|im_start|>", "<|im_end|>"]
 history = []
 used_history = 3
+max_history = 100
 
 #############
 
@@ -235,8 +236,8 @@ def stream(ws, room_id, text, uname):
     response = get_message()
     history.append({"role": "assistant", "content": response})
 
-    if len(history) > 100:
-        history = history[-100:]
+    if len(history) > max_history:
+        history = history[-max_history :]
 
     send_message("messageEnd", response)
 
