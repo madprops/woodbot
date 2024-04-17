@@ -132,9 +132,15 @@ def on_message(ws, message):
                 global history
                 history = []
                 send_message(ws, "History cleared", room_id)
-                return
+            elif argument.isdigit():
+                global used_history
+                num = int(argument)
 
-            respond(ws, room_id, argument, uname)
+                if num <= max_history:
+                    used_history = num
+                    send_message(ws, f"History set to {used_history}", room_id)
+            else:
+                respond(ws, room_id, argument, uname)
 
 
 def send_message(ws, text, room_id):
