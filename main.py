@@ -108,7 +108,7 @@ def on_message(ws, message):
     except BaseException:
         return
 
-    if data["type"] == "message":
+    if data["type"] in ["message", "messageEnd"]:
         if streaming:
             return
 
