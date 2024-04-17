@@ -33,7 +33,8 @@ ws = None
 
 # model = "/media/storage3/models/tinyllama-1.1b-chat-v0.3.Q6_K.gguf"
 model = "/media/storage3/models/pirouette-7b.Q5_K_M.gguf"
-system = f"You can talk about anything. You are a bit rude and unhinged. You make subtle bird references sometimes. Respond in 280 characters or less."
+default_system = f"You can talk about anything. You are a bit rude and unhinged. You make subtle bird references sometimes. Respond in 280 characters or less."
+system = default_system
 context = 2048
 chat_format = "chatml"
 threads = 6
@@ -44,7 +45,8 @@ verbose = False
 max_input = 200
 stop = ["<|im_start|>", "<|im_end|>"]
 history = []
-used_history = 3
+default_history = 3
+used_history = default_history
 max_history = 100
 
 #############
@@ -99,6 +101,8 @@ def run():
 
 
 def on_message(ws, message):
+    global history, used_history, system
+
     try:
         data = json.loads(message)
     except BaseException:
@@ -129,16 +133,34 @@ def on_message(ws, message):
                    "wood,", "wood:"]:
 
             if argument == "clear":
-                global history
                 history = []
                 send_message(ws, "History cleared", room_id)
-            elif argument.isdigit():
-                global used_history
-                num = int(argument)
+            elif argument == "history":
+                send_message(ws, f"History: {used_history}", room_id)
+            elif argument.startswith("history = "):
+                new_history = argument.replace("history = ", "", 1).strip()
 
-                if num >= 0 and num <= max_history:
-                    used_history = num
-                    send_message(ws, f"History set to {used_history}", room_id)
+                if new_history == "default":
+                    used_history = default_history
+                    send_message(ws, f"History set to default", room_id)
+                elif new_history and new_history.isdigit():
+                    new_history = int(new_history)
+
+                    if new_history >= 0 and new_history <= max_history:
+                        used_history = int(new_history)
+                        send_message(ws, f"History set to {used_history}", room_id)
+            elif argument == "system":
+                send_message(ws, f"System: {system}.", room_id)
+            elif argument.startswith("system = "):
+                new_system = argument.replace("system = ", "", 1).strip()
+
+                if new_system:
+                    if new_system == "default":
+                        system = default_system
+                        send_message(ws, f"System set to default", room_id)
+                    else:
+                        system = new_system
+                        send_message(ws, f"System prompt changed", room_id)
             else:
                 respond(ws, room_id, argument, uname)
 
