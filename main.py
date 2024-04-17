@@ -127,7 +127,17 @@ def on_message(ws, message):
                    "woody,", "woddy,", "woody:", "woddy:", "wody,", "wody:",
                    "wood,", "wood:"]:
 
+            if argument == "clear":
+                global history
+                history = []
+                send_message(ws, "History cleared", room_id)
+                return
+
             respond(ws, room_id, argument, uname)
+
+
+def send_message(ws, text, room_id):
+    ws.send(json.dumps({"type": "message", "data": text, "roomId": room_id}))
 
 
 def respond(ws, room_id, text, uname):
