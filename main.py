@@ -234,6 +234,10 @@ def stream(ws, room_id, text, uname):
 
     response = get_message()
     history.append({"role": "assistant", "content": response})
+
+    if len(history) > 100:
+        history = history[-100:]
+
     send_message("messageEnd", response)
 
 
