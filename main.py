@@ -123,7 +123,8 @@ def on_message(ws, message):
         room_id = data["roomId"]
 
         if cmd in ["!ai", "!a", "!i", ".ai", ";ai", ",ai",
-                   "woody,", "woddy,", "woody:", "woddy:", "wody,", "wody:"]:
+                   "woody,", "woddy,", "woody:", "woddy:", "wody,", "wody:",
+                   "wood,", "wood:"]:
 
             respond(ws, room_id, argument, uname)
 
