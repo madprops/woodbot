@@ -132,7 +132,16 @@ def on_message(ws, message):
                    "woody,", "woddy,", "woody:", "woddy:", "wody,", "wody:",
                    "wood,", "wood:"]:
 
-            if argument == "clear":
+            if argument == "help":
+                help_msgs = [
+                    "clear",
+                    "history = [ int | default ]",
+                    "system = [ str | default ]"
+                ]
+
+                help_msg = f"Commands: {', '.join(help_msgs)}"
+                send_message(ws, help_msg, room_id)
+            elif argument == "clear":
                 history = []
                 send_message(ws, "History cleared", room_id)
             elif argument == "history":
