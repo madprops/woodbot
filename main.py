@@ -130,7 +130,7 @@ def on_message(ws, message):
 
         if cmd in ["!ai", "!a", "!i", ".ai", ";ai", ",ai",
                    "woody,", "woddy,", "woody:", "woddy:", "wody,", "wody:",
-                   "wood,", "wood:"]:
+                   "wood,", "wood:", "woffy,", "woffy:", "woofy,", "woofy:"]:
 
             if argument == "help":
                 help_msgs = [
