@@ -278,17 +278,16 @@ def stream(ws, room_id, text, uname):
 
     send_message("messageEnd", response)
 
+llama = Llama(
+    model_path=model,
+    n_ctx=context,
+    n_threads=threads,
+    n_gpu_layers=gpu_layers,
+    verbose=verbose,
+    chat_format=chat_format,
+)
 
 while True:
-    llama = Llama(
-        model_path=model,
-        n_ctx=context,
-        n_threads=threads,
-        n_gpu_layers=gpu_layers,
-        verbose=verbose,
-        chat_format=chat_format,
-    )
-
     try:
         auth()
         msg("Authenticated")
