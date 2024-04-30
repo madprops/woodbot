@@ -214,7 +214,6 @@ def stream(ws, room_id, text, uname):
             stream=True,
             max_tokens=360,
             messages=messages,
-            seed=326,
             stop=stop,
         )
     except BaseException as e:
