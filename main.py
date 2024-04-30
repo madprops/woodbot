@@ -45,7 +45,7 @@ verbose = False
 max_input = 200
 stop = ["<|im_start|>", "<|im_end|>"]
 history = []
-default_history = 3
+default_history = 0
 used_history = default_history
 max_history = 100
 
