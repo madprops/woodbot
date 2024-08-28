@@ -33,7 +33,7 @@ ws = None
 
 # model = "/media/storage3/models/tinyllama-1.1b-chat-v0.3.Q6_K.gguf"
 # model = "/media/storage3/models/pirouette-7b.Q5_K_M.gguf"
-model = "/media/storage1/models/Meta-Llama-3-8B-Instruct.Q5_K_M.gguf"
+model = "/media/storage1/models/llama3.gguf"
 default_system = f"You can talk about anything. You are a bit rude and unhinged. You make subtle bird references sometimes. Respond in 280 characters or less."
 system = default_system
 context = 2048

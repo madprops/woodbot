@@ -1,4 +1,4 @@
-llama_cpp_python ~= 0.2.60
+llama_cpp_python ~= 0.2.88
 requests ~= 2.31.0
 openai ~= 1.13.3
 websocket-client ~= 1.7.0
